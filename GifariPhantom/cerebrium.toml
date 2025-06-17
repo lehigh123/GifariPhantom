@@ -1,0 +1,55 @@
+[cerebrium.deployment]
+name = "gifariphantom"
+python_version = "3.12"
+docker_base_image_url = "nvidia/cuda:12.0.1-devel-ubuntu22.04"
+disable_auth = false
+include = ['./*', 'main.py', 'cerebrium.toml']
+exclude = ['.*']
+shell_commands = [
+    "git clone https://github.com/Dao-AILab/flash-attention.git",
+    "cd flash-attention",
+    "pip install . --no-build-isolation"
+]
+
+[cerebrium.hardware]
+cpu = 3
+memory = 32.0
+compute = "ADA_L40"
+
+[cerebrium.dependencies.pip]
+torch = "latest"
+torchvision = ">=0.19.0"
+numpy = ">=1.23.5,<2"
+opencv-python = ">=4.9.0.80"
+diffusers = ">=0.31.0"
+transformers = ">=4.49.0"
+tokenizers = ">=0.20.3"
+accelerate = ">=1.1.1"
+tqdm = ">=4.65.0"
+imageio = ">=2.31.1"
+easydict = ">=1.9"
+ftfy = ">=6.1.1"
+dashscope = ">=1.10.0"
+einops = ">=0.7.0"
+pydantic = ">=2.6.0"
+gradio = ">=5.0.0"
+xfuser = ">=0.4.1"
+
+
+[cerebrium.scaling]
+min_replicas = 0
+max_replicas = 5
+cooldown = 30
+replica_concurrency = 1
+response_grace_period = 900
+scaling_metric = "concurrency_utilization"
+scaling_target = 100
+scaling_buffer = 0
+roll_out_duration_seconds = 0
+
+
+[cerebrium.dependencies.apt]
+git = "latest"
+ffmpeg = "latest"
+libsm6 = "latest"
+libxext6 = "latest"
