@@ -30,7 +30,7 @@ def cache_video(tensor,
                 retry=5):
     logging.info(f"I am here inside cache_video {save_file}")
     # cache file
-    cache_file = osp.join('/persistent-storage/phantom_output', rand_name(
+    cache_file = osp.join('/persistent-storage/', rand_name(
         suffix=suffix)) if save_file is None else save_file
 
     # save to cache
@@ -55,6 +55,7 @@ def cache_video(tensor,
             writer.close()
             return cache_file
         except Exception as e:
+            print(f'cache_video in retry failed, error: {e}', flush=True)
             error = e
             continue
     else:
