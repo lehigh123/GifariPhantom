@@ -12,7 +12,8 @@ timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
 # Create a safe filename from the prompt
 # prompt = "The warm sun shines over the grass. A little girl with twin ponytails, a green bow on her head, and a light green dress squats next to the blooming daisies. Next to her, a brown and white dog sticks out its tongue, its furry tail wagging happily. The little girl smiles and holds up a yellow and red toy camera with a blue button to freeze the happy moment with the dog."
-prompt = "暖阳漫过草地，扎着双马尾、头戴绿色蝴蝶结、身穿浅绿色连衣裙的小女孩蹲在盛开的雏菊旁。她身旁一只棕白相间的狗狗吐着舌头，毛茸茸尾巴欢快摇晃。小女孩笑着举起黄红配色、带有蓝色按钮的玩具相机，将和狗狗的欢乐瞬间定格。"
+# prompt = "暖阳漫过草地，扎着双马尾、头戴绿色蝴蝶结、身穿浅绿色连衣裙的小女孩蹲在盛开的雏菊旁。她身旁一只棕白相间的狗狗吐着舌头，毛茸茸尾巴欢快摇晃。小女孩笑着举起黄红配色、带有蓝色按钮的玩具相机，将和狗狗的欢乐瞬间定格。"
+prompt = "An older woman takes out her yellow toy camera and photographs the grand canyon"
 # Take first 30 chars of prompt, remove special chars, replace spaces with underscores
 safe_prompt = (
     re.sub(r"[^a-zA-Z0-9\s]", "", prompt[:30])
@@ -47,7 +48,7 @@ payload = json.dumps(
             "prompt_extend_target_lang": "ch",
             "base_seed": 42,
             "image": None,
-            "ref_image": "/persistent-storage/Phantom-Wan-Models/assets/ref1.png,/persistent-storage/Phantom-Wan-Models/assets/ref2.png",
+            "ref_image": "/persistent-storage/Phantom-Wan-Models/assets/ref1.png,/persistent-storage/Phantom-Wan-Models/assets/ref6.png",
             "sample_solver": "unipc",
             "sample_steps": 50,
             "sample_shift": 5.0,
