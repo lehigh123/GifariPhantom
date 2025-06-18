@@ -3,8 +3,8 @@ name = "gifariphantom"
 python_version = "3.12"
 docker_base_image_url = "nvidia/cuda:12.0.1-devel-ubuntu22.04"
 disable_auth = false
-include = ['./*', 'main.py', 'cerebrium.toml']
-exclude = ['.*']
+include = ['./*', 'main.py', 'cerebrium.toml', 'src/*']
+exclude = ['.*', 'tests/*']
 shell_commands = [
     "git clone https://github.com/Dao-AILab/flash-attention.git",
     "cd flash-attention",

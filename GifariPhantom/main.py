@@ -10,6 +10,8 @@ from phantom_wan.utils.utils import cache_video, cache_image
 import torch.distributed as dist
 from datetime import datetime
 from huggingface_hub import snapshot_download
+from src.dummy import PI
+from src.image_utils.image_utils import load_ref_images
 
 logging.basicConfig(level=logging.INFO)
 
@@ -125,49 +127,10 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
 def _init_logging(rank):
-    if rank == 0:
-        logging.basicConfig(
-            level=logging.INFO,
-            format="%(asctime)s - %(levelname)s - %(message)s",
-        )
-
-
-def load_ref_images(path, size):
-    # Load size.
-    h, w = size[1], size[0]
-    # Load images.
-    ref_paths = path.split(",")
-    ref_images = []
-    for image_path in ref_paths:
-        with Image.open(image_path) as img:
-            img = img.convert("RGB")
-
-            # Calculate the required size to keep aspect ratio and fill the rest with padding.
-            img_ratio = img.width / img.height
-            target_ratio = w / h
-
-            if img_ratio > target_ratio:  # Image is wider than target
-                new_width = w
-                new_height = int(new_width / img_ratio)
-            else:  # Image is taller than target
-                new_height = h
-                new_width = int(new_height * img_ratio)
-
-            img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
-
-            # Create a new image with the target size and place the resized image in the center
-            delta_w = w - img.size[0]
-            delta_h = h - img.size[1]
-            padding = (
-                delta_w // 2,
-                delta_h // 2,
-                delta_w - (delta_w // 2),
-                delta_h - (delta_h // 2),
-            )
-            new_img = ImageOps.expand(img, padding, fill=(255, 255, 255))
-            ref_images.append(new_img)
-    logging.info(f"ref_images loaded {ref_images}")
-    return ref_images
+    logging.basicConfig(
+        level=logging.INFO if rank == 0 else logging.WARN,
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    )
 
 
 def run(input):
