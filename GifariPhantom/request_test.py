@@ -40,6 +40,11 @@ def main():
     parser.add_argument('--ulysses_size', type=int, default=1, help='Size of ulysses parallelism in DiT (default: 1)')
     parser.add_argument('--ring_size', type=int, default=1, help='Size of ring attention parallelism in DiT (default: 1)')
     parser.add_argument('--sample_shift', type=float, default=5.0, help='Sampling shift factor for flow matching schedulers (default: 5.0)')
+    parser.add_argument('--use_prompt_extend', action='store_true', help='Enable prompt extension to enhance input prompts')
+    parser.add_argument('--prompt_extend_method', type=str, choices=['dashscope', 'local_qwen'], default='local_qwen', help='Prompt extension method (default: local_qwen)')
+    parser.add_argument('--prompt_extend_model', type=str, default=None, help='Model name for prompt extension (default: auto-selected based on method)')
+    parser.add_argument('--prompt_extend_target_lang', type=str, choices=['ch', 'en'], default='en', help='Target language for prompt extension (default: en)')
+    parser.add_argument('--hf_cache_dir', type=str, default='/persistent-storage/hf_cache', help='Hugging Face cache directory (default: /persistent-storage/hf_cache)')
     args = parser.parse_args()
 
     # Set the API URL, append webhookEndpoint and async if provided
@@ -83,10 +88,10 @@ def main():
             "dit_fsdp": args.dit_fsdp,
             "save_file": f"/persistent-storage/{filename}",
             "prompt": args.prompt,
-            "use_prompt_extend": False,
-            "prompt_extend_method": "local_qwen",
-            "prompt_extend_model": None,
-            "prompt_extend_target_lang": "ch",
+            "use_prompt_extend": args.use_prompt_extend,
+            "prompt_extend_method": args.prompt_extend_method,
+            "prompt_extend_model": args.prompt_extend_model,
+            "prompt_extend_target_lang": args.prompt_extend_target_lang,
             "base_seed": args.base_seed,
             "image": None,
             "ref_image": ref_images_base64_str,

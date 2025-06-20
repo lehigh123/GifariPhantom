@@ -6,11 +6,16 @@ import logging
 import phantom_wan
 from phantom_wan.configs import WAN_CONFIGS, SIZE_CONFIGS
 from phantom_wan.utils.utils import cache_video, cache_image
+from phantom_wan.utils.prompt_extend import DashScopePromptExpander, QwenPromptExpander
 import torch.distributed as dist
 from datetime import datetime
 from huggingface_hub import snapshot_download
 from src.image_utils.image_utils import load_ref_images
-import json
+
+# Set Hugging Face cache directory to persistent storage
+os.environ['HF_HOME'] = '/persistent-storage/hf_cache'
+os.environ['TRANSFORMERS_CACHE'] = '/persistent-storage/hf_cache'
+os.environ['HF_DATASETS_CACHE'] = '/persistent-storage/hf_cache'
 
 logging.basicConfig(level=logging.INFO)
 
@@ -119,6 +124,7 @@ snapshot_download(
     repo_id="bytedance-research/Phantom",
     local_dir="/persistent-storage/Phantom-Wan-Models",
     token=hf_token,
+    ignore_patterns=["*14B*", "Phantom_Wan_14B*"],
 )
 
 
@@ -147,26 +153,47 @@ def run(input):
     _init_logging(rank)
     # Parse input into Item model
     item = Item(**input)
-    current_path = os.getcwd()
-    directories = [d for d in os.listdir(current_path) if os.path.isdir(os.path.join(current_path, d))]
-    with open("/persistent-storage/emptyfile.txt", "w") as f:
-        f.write("test")
-        pass
-    logging.info(f"Current path: {current_path}")
-    logging.info("Directories:")
-    for d in directories:
-        logging.info(f" dir: {d}")
-    logging.info("persistent Directories:")
-    for d in os.listdir('/persistent-storage/'):
-        logging.info(f" dir: {d}")
-
-
     device = local_rank
 
     # Log environment variables
     logging.info(f"RANK: {rank}")
     logging.info(f"WORLD_SIZE: {world_size}")
     logging.info(f"LOCAL_RANK: {local_rank}")
+    if item.use_prompt_extend:
+        if item.prompt_extend_method == "dashscope":
+            prompt_expander = DashScopePromptExpander(
+                model_name=item.prompt_extend_model, is_vl="i2v" in item.task)
+        elif item.prompt_extend_method == "local_qwen":
+            prompt_expander = QwenPromptExpander(
+                model_name=item.prompt_extend_model,
+                is_vl="i2v" in item.task,
+                device=rank)
+        else:
+            raise NotImplementedError(
+                f"Unsupport prompt_extend_method: {item.prompt_extend_method}")
+    else:
+        logging.info("Not using prompt extend")
+    if item.use_prompt_extend:
+        logging.info("Extending prompt ...")
+        if rank == 0:
+            prompt_output = prompt_expander(
+                item.prompt,
+                tar_lang=item.prompt_extend_target_lang,
+                seed=item.base_seed)
+            if prompt_output.status == False:
+                logging.info(
+                    f"Extending prompt failed: {prompt_output.message}")
+                logging.info("Falling back to original prompt.")
+                input_prompt = item.prompt
+            else:
+                input_prompt = prompt_output.prompt
+            input_prompt = [input_prompt]
+        else:
+            input_prompt = [None]
+        if dist.is_initialized():
+            dist.broadcast_object_list(input_prompt, src=0)
+        item.prompt = input_prompt[0]
+        logging.info(f"Extended prompt: {item.prompt}")
 
     # Handle offload_model setting
     if item.offload_model is None:
