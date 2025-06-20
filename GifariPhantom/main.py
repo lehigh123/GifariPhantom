@@ -2,7 +2,6 @@ import torch
 import os
 from pydantic import BaseModel, Field
 from typing import Optional, Literal
-from PIL import Image, ImageOps
 import logging
 import phantom_wan
 from phantom_wan.configs import WAN_CONFIGS, SIZE_CONFIGS
@@ -10,8 +9,8 @@ from phantom_wan.utils.utils import cache_video, cache_image
 import torch.distributed as dist
 from datetime import datetime
 from huggingface_hub import snapshot_download
-from src.dummy import PI
 from src.image_utils.image_utils import load_ref_images
+import json
 
 logging.basicConfig(level=logging.INFO)
 
@@ -133,6 +132,13 @@ def _init_logging(rank):
     )
 
 
+def summarize_ref_image(ref_image):
+    if not ref_image:
+        return None
+    imgs = ref_image.split(",")
+    return f"<{len(imgs)} base64 images, lengths: {[len(s) for s in imgs]}>"
+
+
 def run(input):
     # Setup distributed environment
     rank = int(os.getenv("RANK", 0))
@@ -228,7 +234,7 @@ def run(input):
 
     # Generate based on task type
     if "s2v" in item.task:
-        ref_images = load_ref_images(item.ref_image, SIZE_CONFIGS[item.size])
+        ref_images = load_ref_images(item.ref_image, SIZE_CONFIGS[item.size], True)
         logging.info("Creating Phantom-Wan pipeline.")
         wan_s2v = phantom_wan.Phantom_Wan_S2V(
             config=cfg,

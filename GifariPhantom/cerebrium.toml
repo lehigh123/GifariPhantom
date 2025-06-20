@@ -1,5 +1,5 @@
 [cerebrium.deployment]
-name = "gifariphantom"
+name = "phantom"
 python_version = "3.12"
 docker_base_image_url = "nvidia/cuda:12.0.1-devel-ubuntu22.04"
 disable_auth = false
@@ -14,6 +14,7 @@ shell_commands = [
 [cerebrium.hardware]
 cpu = 4
 memory = 32.0
+gpu_count = 1
 compute = "ADA_L40"
 
 [cerebrium.dependencies.pip]
@@ -42,7 +43,7 @@ min_replicas = 0
 max_replicas = 5
 cooldown = 30
 replica_concurrency = 1
-response_grace_period = 900
+response_grace_period = 1200
 scaling_metric = "concurrency_utilization"
 scaling_target = 100
 scaling_buffer = 0
