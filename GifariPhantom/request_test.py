@@ -44,7 +44,6 @@ def main():
     parser.add_argument('--prompt_extend_method', type=str, choices=['dashscope', 'local_qwen'], default='local_qwen', help='Prompt extension method (default: local_qwen)')
     parser.add_argument('--prompt_extend_model', type=str, default=None, help='Model name for prompt extension (default: auto-selected based on method)')
     parser.add_argument('--prompt_extend_target_lang', type=str, choices=['ch', 'en'], default='en', help='Target language for prompt extension (default: en)')
-    parser.add_argument('--hf_cache_dir', type=str, default='/persistent-storage/hf_cache', help='Hugging Face cache directory (default: /persistent-storage/hf_cache)')
     args = parser.parse_args()
 
     # Set the API URL, append webhookEndpoint and async if provided
