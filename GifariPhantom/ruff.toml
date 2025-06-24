@@ -1,0 +1,6 @@
+# Set the maximum line length to 
+line-length = 200
+fix = true  # ✅ Enables automatic fixing
+
+[lint]
+extend-select = ["E501"]
