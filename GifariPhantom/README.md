@@ -52,9 +52,11 @@ uv run request_test.py --ref_images tests/test-data/ref1.png,tests/test-data/ref
 ** 14B
 ```
 uv run request_test.py --ref_images "tests/test-data/ref12.png,tests/test-data/ref13.png" --size "832*480" \
-    --task i2v-14B  \
-    --frame_num 81 \
-    --prompt "扎着双丸子头，身着红黑配色并带有火焰纹饰服饰，颈戴金项圈、臂缠金护腕的哪吒，和有着一头淡蓝色头发，额间有蓝色印记，身着一袭白色长袍的敖丙，并肩坐在教室的座位上，他们专注地讨论着书本内容。背景为柔和的灯光和窗外微风拂过的树叶，营造出安静又充满活力的学习氛围。"
+    --task s2v-14B  \
+    --frame_num 2 \
+    --prompt "扎着双丸子头，身着红黑配色并带有火焰纹饰服饰，颈戴金项圈、臂缠金护腕的哪吒，和有着一头淡蓝色头发，额间有蓝色印记，身着一袭白色长袍的敖丙，并肩坐在教室的座位上，他们专注地讨论着书本内容。背景为柔和的灯光和窗外微风拂过的树叶，营造出安静又充满活力的学习氛围。" \
+    --phantom_ckpt /persistent-storage/Phantom-Wan-Models \
+    --dit_fsdp --t5_fsdp --ulysses_size 8 --ring_size 1
 ```
 * ngrok: [http://127.0.0.1:4040/status](http://127.0.0.1:4040/status)
 

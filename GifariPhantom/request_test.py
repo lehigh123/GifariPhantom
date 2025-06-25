@@ -11,7 +11,7 @@ import copy
 
 # url = "https://api.cortex.cerebrium.ai/v4/p-70eb8ec7/gifariphantom/run"
 # url = "https://api.cortex.cerebrium.ai/v4/p-70eb8ec7/phantom/run"
-url = "https://api.cortex.cerebrium.ai/v4/p-a2961cf2/phantom/run"
+url = "https://api.cortex.cerebrium.ai/v4/p-70eb8ec7/phantom-14b-fp8-e4m3fn/predict"
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
 
@@ -114,7 +114,7 @@ def main():
     logging.info("Output file name: %s", filename)
 
     headers = {
-        "Authorization": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0SWQiOiJwLWEyOTYxY2YyIiwibmFtZSI6IiIsImRlc2NyaXB0aW9uIjoiIiwiZXhwIjoyMDY1OTEwNDk3fQ.cSJS--BJ2ThZqzwROS9jf00gOFQ57iTN-OkZxlHNE5w1HLjNpH0OZpg2xjYzxcA05vngjoIqSPDo7paUi34JwiH0Azh1upurkWrRNHevDasd1movEwbNdAH0yY533sZR4t-q_bfZpgFhS3ltZDeNYiogwmhDdME0pFTZE-FPYpRk2VVTwKI_Tr23frdU-OaoN8AFtc89C_cISoEgKV3BfM47hipTCp5BazMHIqv8SyAh2pAgVGiKIzXddKO1fhm5ZSZnmvBVIYcG6sCMcBevaBqvcZAORpJTatj3kEP2b2840GRsE6xpeaRqDW9IBOG_0fmVShuPcOzZxfZzkGAsYA",
+        "Authorization": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0SWQiOiJwLTcwZWI4ZWM3IiwiaWF0IjoxNzUwMTgwNDQyLCJleHAiOjIwNjU3NTY0NDJ9.DKeXUxzQDx9UAww5qOGZ3AW2nh19zN7WGc_ZH466ZhkmQ16npHJTCEukLs7fRQhgwKWz6OD1hWNrQL8GgdsB_nbQUKykBy8WP-qPLETT4HpJHyY8UaWuG6BFo6LGFX0UrsunOKMhQb7kuZ1Nf4ArjQ7LTBvuuDyyO6e_3nCEthEig4sucV6hdbwuDtObkq_uUoPcEfKDpJgFt3DTJYfXU39wdLeDIoZm4cefM8O3MNNq2meIAuVbgBbe_xqJhlJhJ0f7Xh9FtX7xkwifT6wE5NVLpI1T0nXo5snBsUViIHfNJLGObccbDH0UkHtCGkBwa9qqf4wUQgej8itTj81Ezw",
         "Content-Type": "application/json",
     }
 

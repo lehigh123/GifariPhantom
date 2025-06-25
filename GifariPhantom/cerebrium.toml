@@ -1,10 +1,10 @@
 [cerebrium.deployment]
-name = "phantom"
+name = "phantom-14b-fp8-e4m3fn"
 python_version = "3.12"
 docker_base_image_url = "nvidia/cuda:12.0.1-devel-ubuntu22.04"
 disable_auth = false
 include = ['./*', 'main.py', 'cerebrium.toml', 'src/*']
-exclude = ['.*', 'tests/*']
+exclude = ['.*', 'tests/*', '*.mp4', '__pycache__/*', 'dist/*']
 shell_commands = [
     "git clone https://github.com/Dao-AILab/flash-attention.git",
     "cd flash-attention",
@@ -12,10 +12,27 @@ shell_commands = [
 ]
 
 [cerebrium.hardware]
-cpu = 4
-memory = 32.0
+cpu = 10
+memory = 92
 gpu_count = 1
 compute = "ADA_L40"
+
+[cerebrium.scaling]
+min_replicas = 0
+max_replicas = 1
+cooldown = 30
+replica_concurrency = 1
+response_grace_period = 1200
+scaling_metric = "concurrency_utilization"
+scaling_target = 100
+scaling_buffer = 0
+roll_out_duration_seconds = 0
+
+[cerebrium.dependencies.apt]
+git = "latest"
+ffmpeg = "latest"
+libsm6 = "latest"
+libxext6 = "latest"
 
 [cerebrium.dependencies.pip]
 torch = ">=2.4.0"
@@ -36,22 +53,3 @@ numpy = ">=1.23.5,<2"
 xfuser = ">=0.4.1"
 einops = ">=0.7.0"
 pydantic = ">=2.6.0"
-
-
-[cerebrium.scaling]
-min_replicas = 0
-max_replicas = 5
-cooldown = 30
-replica_concurrency = 1
-response_grace_period = 1200
-scaling_metric = "concurrency_utilization"
-scaling_target = 100
-scaling_buffer = 0
-roll_out_duration_seconds = 0
-
-
-[cerebrium.dependencies.apt]
-git = "latest"
-ffmpeg = "latest"
-libsm6 = "latest"
-libxext6 = "latest"
